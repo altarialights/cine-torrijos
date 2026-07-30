@@ -1,0 +1,24 @@
+---
+import { foodItems } from "../../data/cinema";
+import FoodItemCard from "../food/FoodItemCard.astro";
+
+const orderedFood = [
+  foodItems.find((item) => item.id === "popcorn"),
+  foodItems.find((item) => item.id === "hotdog"),
+  foodItems.find((item) => item.id === "pizza"),
+].filter(Boolean);
+---
+
+<section class="home-section food-section" id="comida" aria-labelledby="comida-title">
+  <div class="section-inner">
+    <div class="section-heading reveal-item">
+      <p>El sabor de la película</p>
+      <h2 id="comida-title">Todo sabe mejor frente a la gran pantalla</h2>
+      <span>Elige tu acompañamiento y completa la experiencia antes de que empiece la película.</span>
+    </div>
+
+    <div class="food-grid" aria-label="Comida disponible en el cine">
+      {orderedFood.map((item, index) => item && <FoodItemCard item={item} index={index} />)}
+    </div>
+  </div>
+</section>

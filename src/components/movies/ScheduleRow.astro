@@ -1,0 +1,29 @@
+---
+import type { movies } from "../../data/cinema";
+
+type Movie = (typeof movies)[number];
+
+interface Props {
+  movie: Movie;
+  index: number;
+}
+
+const { movie, index } = Astro.props;
+---
+
+<article class="schedule-row reveal-item" id={`horarios-${movie.id}`} style={`--reveal-index: ${index}`}>
+  <img src={movie.image} alt={`Cartel de ${movie.title}`} width="160" height="240" loading="lazy" decoding="async" />
+  <div class="schedule-row__info">
+    <p>{movie.genre}</p>
+    <h3>{movie.title}</h3>
+  </div>
+  <div class="schedule-row__times" aria-label={`Sesiones de ${movie.title}`}>
+    {
+      movie.sessions.map((session) => (
+        <button type="button" aria-pressed="false" data-movie={movie.title} data-session={session}>
+          {session}
+        </button>
+      ))
+    }
+  </div>
+</article>

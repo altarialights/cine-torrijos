@@ -1,0 +1,30 @@
+---
+import { navItems } from "../../data/cinema";
+---
+
+<section class="home-section contact-section" id="contacto" aria-labelledby="contacto-title">
+  <div class="section-inner contact-layout">
+    <div class="contact-copy reveal-item">
+      <p class="section-kicker">Cine Torrijos</p>
+      <h2 id="contacto-title">Nos vemos en el cine</h2>
+      <p>
+        Consulta la cartelera, elige tu sesión y vuelve a vivir la emoción de la gran pantalla en Torrijos.
+      </p>
+      <dl>
+        <div>
+          <dt>Cine</dt>
+          <dd>Cine Torrijos</dd>
+        </div>
+        <div>
+          <dt>Ubicación</dt>
+          <dd>Torrijos, Toledo</dd>
+        </div>
+      </dl>
+      <a class="contact-cta" href="/#cartelera">Volver a la cartelera</a>
+    </div>
+
+    <nav class="contact-nav reveal-item" aria-label="Navegación de cierre">
+      {navItems.map((item) => <a href={item.href}>{item.label}</a>)}
+    </nav>
+  </div>
+</section>

@@ -1,0 +1,24 @@
+---
+import type { foodItems } from "../../data/cinema";
+
+type FoodItem = (typeof foodItems)[number];
+
+interface Props {
+  item: FoodItem;
+  index: number;
+}
+
+const { item, index } = Astro.props;
+---
+
+<article class:list={["food-card", item.featured && "food-card--featured", "reveal-item"]} style={`--reveal-index: ${index}`}>
+  <div class="food-card__image">
+    <img src={item.image} alt={item.alt} width="1448" height="1086" loading="lazy" decoding="async" />
+  </div>
+  <div class="food-card__content">
+    <p>{item.tag}</p>
+    <h3>{item.name}</h3>
+    <span>{item.description}</span>
+    <span class="food-card__availability">Disponible en el cine</span>
+  </div>
+</article>

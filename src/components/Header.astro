@@ -1,0 +1,166 @@
+---
+import { desktopNavItems, navItems } from "../data/cinema";
+---
+
+<header class="site-header" data-site-header>
+  <div class="site-header__inner">
+    <a class="brand-mark" href="/#inicio" aria-label="Cine Torrijos, volver al inicio">
+      <span class="brand-mark__symbol" aria-hidden="true">
+        <span></span>
+      </span>
+      <span class="brand-mark__text">Cine Torrijos</span>
+    </a>
+
+    <nav class="desktop-nav" aria-label="Navegacion principal">
+      {
+        desktopNavItems.map((item) => (
+          <a href={item.href} class:list={["desktop-nav__link", item.active && "is-active"]}>
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <a class="header-cta" href="/#cartelera">
+      <svg aria-hidden="true" viewBox="0 0 24 24">
+        <path d="M4.75 8.25V6.5A1.75 1.75 0 0 1 6.5 4.75h11A1.75 1.75 0 0 1 19.25 6.5v1.75a2.75 2.75 0 0 0 0 5.5v3.75a1.75 1.75 0 0 1-1.75 1.75h-11a1.75 1.75 0 0 1-1.75-1.75v-3.75a2.75 2.75 0 0 0 0-5.5Z" />
+        <path d="M9.75 7.25v9.5" />
+      </svg>
+      <span>Comprar entradas</span>
+    </a>
+
+    <button
+      class="menu-toggle"
+      type="button"
+      aria-label="Abrir menu de navegacion"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+      data-menu-toggle
+    >
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </button>
+  </div>
+
+  <div class="mobile-menu" id="mobile-menu" aria-hidden="true" inert data-mobile-menu>
+    <div class="mobile-menu__panel" role="dialog" aria-modal="true" aria-label="Menu de navegacion">
+      <div class="mobile-menu__top">
+        <span class="mobile-menu__label">Menu</span>
+        <button class="mobile-menu__close" type="button" aria-label="Cerrar menu" data-menu-close>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </button>
+      </div>
+
+      <nav class="mobile-menu__nav" aria-label="Navegacion movil">
+        {
+          navItems.map((item) => (
+            <a href={item.href} class:list={["mobile-menu__link", item.active && "is-active"]}>
+              {item.label}
+            </a>
+          ))
+        }
+      </nav>
+
+      <a class="mobile-menu__cta" href="/#cartelera">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M4.75 8.25V6.5A1.75 1.75 0 0 1 6.5 4.75h11A1.75 1.75 0 0 1 19.25 6.5v1.75a2.75 2.75 0 0 0 0 5.5v3.75a1.75 1.75 0 0 1-1.75 1.75h-11a1.75 1.75 0 0 1-1.75-1.75v-3.75a2.75 2.75 0 0 0 0-5.5Z" />
+          <path d="M9.75 7.25v9.5" />
+        </svg>
+        Comprar entradas
+      </a>
+    </div>
+  </div>
+</header>
+
+<script>
+  const header = document.querySelector("[data-site-header]");
+  const toggle = document.querySelector("[data-menu-toggle]");
+  const closeButton = document.querySelector("[data-menu-close]");
+  const menu = document.querySelector("[data-mobile-menu]");
+  const panel = menu?.querySelector(".mobile-menu__panel");
+  const links = menu?.querySelectorAll("a");
+  const focusableSelector = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+  let lastFocusedElement = null;
+
+  const updateHeaderState = () => {
+    header?.classList.toggle("is-scrolled", window.scrollY > 12);
+  };
+
+  const getFocusableMenuItems = () => {
+    if (!panel) return [];
+    return Array.from(panel.querySelectorAll(focusableSelector));
+  };
+
+  const openMenu = () => {
+    if (!toggle || !menu || !closeButton) return;
+    lastFocusedElement = document.activeElement;
+    document.documentElement.classList.add("has-open-menu");
+    document.body.classList.add("has-open-menu");
+    menu.removeAttribute("inert");
+    menu.setAttribute("aria-hidden", "false");
+    toggle.setAttribute("aria-expanded", "true");
+    toggle.setAttribute("aria-label", "Cerrar menu de navegacion");
+    closeButton.focus();
+  };
+
+  const closeMenu = ({ restoreFocus = true } = {}) => {
+    if (!toggle || !menu) return;
+    document.documentElement.classList.remove("has-open-menu");
+    document.body.classList.remove("has-open-menu");
+    menu.setAttribute("inert", "");
+    menu.setAttribute("aria-hidden", "true");
+    toggle.setAttribute("aria-expanded", "false");
+    toggle.setAttribute("aria-label", "Abrir menu de navegacion");
+
+    if (restoreFocus) {
+      const focusTarget = lastFocusedElement instanceof HTMLElement ? lastFocusedElement : toggle;
+      focusTarget.focus();
+    }
+  };
+
+  toggle?.addEventListener("click", () => {
+    const isOpen = toggle.getAttribute("aria-expanded") === "true";
+    if (isOpen) {
+      closeMenu();
+    } else {
+      openMenu();
+    }
+  });
+
+  closeButton?.addEventListener("click", () => closeMenu());
+
+  links?.forEach((link) => {
+    link.addEventListener("click", () => closeMenu({ restoreFocus: false }));
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (toggle?.getAttribute("aria-expanded") !== "true") return;
+
+    if (event.key === "Escape") {
+      event.preventDefault();
+      closeMenu();
+      return;
+    }
+
+    if (event.key !== "Tab") return;
+
+    const focusableItems = getFocusableMenuItems();
+    if (!focusableItems.length) return;
+
+    const firstItem = focusableItems[0];
+    const lastItem = focusableItems[focusableItems.length - 1];
+
+    if (event.shiftKey && document.activeElement === firstItem) {
+      event.preventDefault();
+      lastItem.focus();
+    } else if (!event.shiftKey && document.activeElement === lastItem) {
+      event.preventDefault();
+      firstItem.focus();
+    }
+  });
+
+  window.addEventListener("scroll", updateHeaderState, { passive: true });
+  updateHeaderState();
+</script>

@@ -1,0 +1,39 @@
+---
+import type { movies } from "../../data/cinema";
+
+type Movie = (typeof movies)[number];
+
+interface Props {
+  movie: Movie;
+  index: number;
+}
+
+const { movie, index } = Astro.props;
+const visibleSessions = movie.sessions.slice(0, 3);
+const remainingSessions = Math.max(movie.sessions.length - visibleSessions.length, 0);
+const scheduleHref = `/#horarios-${movie.id}`;
+---
+
+<article class="movie-card reveal-item" style={`--reveal-index: ${index}`} data-movie-card>
+  <a class="movie-card__poster-link" href={scheduleHref} aria-label={`Ver sesiones de ${movie.title}`}>
+    <span class="movie-card__poster">
+      <img src={movie.image} alt={`Cartel de ${movie.title}`} width="720" height="1080" loading="lazy" decoding="async" />
+    </span>
+  </a>
+  <div class="movie-card__body">
+    <p class="movie-card__genre">{movie.genre}</p>
+    <h3 class="movie-card__title" title={movie.title}>{movie.title}</h3>
+    <div class="movie-card__sessions" aria-label={`Horarios de ${movie.title}`}>
+      {visibleSessions.map((session) => <a href={scheduleHref}>{session}</a>)}
+      {remainingSessions > 0 && <a class="movie-card__sessions-more" href={scheduleHref}>+{remainingSessions} sesiones</a>}
+    </div>
+    <div class="movie-card__footer">
+      <a class="movie-card__cta" href={scheduleHref} aria-label={`Ver sesiones de ${movie.title}`}>
+        <span>Ver sesiones</span>
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M8.75 5.75 15 12l-6.25 6.25" />
+        </svg>
+      </a>
+    </div>
+  </div>
+</article>

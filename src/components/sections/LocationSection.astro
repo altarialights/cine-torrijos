@@ -1,0 +1,119 @@
+---
+import { locationInfo } from "../../data/cinema";
+---
+
+<section class="home-section location-section" id="ubicacion" aria-labelledby="ubicacion-title">
+  <div class="section-inner">
+    <div class="section-heading location-heading reveal-item">
+      <p>En el corazón de Torrijos</p>
+      <h2 id="ubicacion-title">Tu próxima película está más cerca de lo que imaginas</h2>
+      <span>Encuéntranos en la Calle Cubero, 37, y ven a disfrutar de la gran pantalla en Cine Redux.</span>
+    </div>
+
+    <div class="location-map-shell reveal-item">
+      <iframe
+        src={locationInfo.mapEmbed}
+        title="Ubicación de Cine Redux en Torrijos"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        allowfullscreen
+      ></iframe>
+
+      <div class="location-map-shell__overlay" aria-hidden="true"></div>
+
+      <aside class="location-panel" aria-label="Dirección de Cine Redux">
+        <p class="location-panel__kicker">{locationInfo.name}</p>
+        <h3>
+          {locationInfo.street}
+          <span>{locationInfo.city}</span>
+        </h3>
+        <p>Tu cine en Torrijos.</p>
+
+        <div class="location-panel__actions">
+          <a class="location-button location-button--primary" href={locationInfo.directionsUrl} target="_blank" rel="noopener noreferrer">
+            <svg aria-hidden="true" viewBox="0 0 24 24">
+              <path d="M12 3.75 20.25 12 12 20.25 3.75 12 12 3.75Z" />
+              <path d="M10 15v-3.25h4.2" />
+              <path d="m12.65 9.35 1.55 2.4-2.4 1.55" />
+            </svg>
+            Cómo llegar
+          </a>
+          <a class="location-button location-button--secondary" href={locationInfo.searchUrl} target="_blank" rel="noopener noreferrer">
+            <svg aria-hidden="true" viewBox="0 0 24 24">
+              <path d="M12 21.25s6.25-5.6 6.25-11.25A6.25 6.25 0 0 0 5.75 10C5.75 15.65 12 21.25 12 21.25Z" />
+              <path d="M12 12.25a2.25 2.25 0 1 0 0-4.5 2.25 2.25 0 0 0 0 4.5Z" />
+            </svg>
+            Abrir en Google Maps
+          </a>
+          <button
+            class="location-copy"
+            type="button"
+            data-copy-address={locationInfo.fullAddress}
+            data-copy-default="Copiar dirección"
+          >
+            <svg aria-hidden="true" viewBox="0 0 24 24">
+              <path d="M8.75 8.75h8.5v10.5h-8.5z" />
+              <path d="M6.75 15.25h-2v-10.5h8.5v2" />
+            </svg>
+            <span>Copiar dirección</span>
+          </button>
+        </div>
+
+        <p class="sr-only" aria-live="polite" data-copy-status></p>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<script>
+  (() => {
+    const buttons = document.querySelectorAll("[data-copy-address]");
+
+    buttons.forEach((button) => {
+      if (!(button instanceof HTMLButtonElement) || button.dataset.initialized === "true") return;
+      button.dataset.initialized = "true";
+
+      const label = button.querySelector("span");
+      const status = button.closest(".location-panel")?.querySelector("[data-copy-status]");
+      const defaultText = button.dataset.copyDefault || "Copiar dirección";
+      const address = button.dataset.copyAddress || "";
+      let timer = 0;
+
+      const setMessage = (message) => {
+        if (label) label.textContent = message;
+        if (status) status.textContent = message;
+        window.clearTimeout(timer);
+        timer = window.setTimeout(() => {
+          if (label) label.textContent = defaultText;
+          if (status) status.textContent = "";
+        }, 2000);
+      };
+
+      const fallbackCopy = () => {
+        const textarea = document.createElement("textarea");
+        textarea.value = address;
+        textarea.setAttribute("readonly", "");
+        textarea.style.position = "fixed";
+        textarea.style.top = "-999px";
+        document.body.append(textarea);
+        textarea.select();
+        const copied = document.execCommand("copy");
+        textarea.remove();
+        return copied;
+      };
+
+      button.addEventListener("click", async () => {
+        try {
+          if (navigator.clipboard?.writeText) {
+            await navigator.clipboard.writeText(address);
+          } else if (!fallbackCopy()) {
+            throw new Error("Clipboard unavailable");
+          }
+          setMessage("Dirección copiada");
+        } catch {
+          setMessage("No se pudo copiar");
+        }
+      });
+    });
+  })();
+</script>

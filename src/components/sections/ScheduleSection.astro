@@ -1,0 +1,66 @@
+---
+import { movies } from "../../data/cinema";
+import ScheduleRow from "../movies/ScheduleRow.astro";
+---
+
+<section class="home-section schedule-section" id="horarios" aria-labelledby="horarios-title">
+  <div class="section-inner">
+    <div class="schedule-shell">
+      <div class="section-heading reveal-item">
+        <p>Elige tu momento</p>
+        <h2 id="horarios-title">Hoy en cartelera</h2>
+        <span>Selecciona la sesión que mejor encaje contigo.</span>
+      </div>
+
+      <div class="schedule-list" data-schedule-list>
+        {movies.map((movie, index) => <ScheduleRow movie={movie} index={index} />)}
+      </div>
+
+      <aside class="session-summary" aria-live="polite" data-session-summary>
+        <div>
+          <p>Sesión seleccionada:</p>
+          <strong data-session-text>Ninguna sesión seleccionada</strong>
+          <span data-demo-message></span>
+        </div>
+        <button class="session-summary__button" type="button" disabled data-continue-button>Continuar</button>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<script>
+  const scheduleList = document.querySelector("[data-schedule-list]");
+  const sessionText = document.querySelector("[data-session-text]");
+  const demoMessage = document.querySelector("[data-demo-message]");
+  const continueButton = document.querySelector("[data-continue-button]");
+  const timeButtons = scheduleList?.querySelectorAll("button[data-movie][data-session]");
+
+  timeButtons?.forEach((button) => {
+    button.addEventListener("click", () => {
+      timeButtons.forEach((item) => item.setAttribute("aria-pressed", "false"));
+      button.setAttribute("aria-pressed", "true");
+
+      const movie = button.getAttribute("data-movie");
+      const session = button.getAttribute("data-session");
+
+      if (sessionText && movie && session) {
+        sessionText.textContent = `${movie} · ${session}`;
+      }
+
+      if (demoMessage) {
+        demoMessage.textContent = "";
+      }
+
+      if (continueButton instanceof HTMLButtonElement) {
+        continueButton.disabled = false;
+      }
+    });
+  });
+
+  continueButton?.addEventListener("click", () => {
+    if (continueButton instanceof HTMLButtonElement && continueButton.disabled) return;
+    if (demoMessage) {
+      demoMessage.textContent = "La compra online se integrará en la siguiente fase.";
+    }
+  });
+</script>

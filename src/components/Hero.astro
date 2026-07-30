@@ -1,0 +1,86 @@
+---
+const benefits = [
+  { label: "Salas de ultima generacion", icon: "screen" },
+  { label: "Sonido envolvente", icon: "sound" },
+  { label: "Butacas confort", icon: "seat" },
+];
+---
+
+<section class="hero-section" id="inicio" aria-labelledby="hero-title">
+  <picture class="hero-media">
+    <source media="(max-width: 767px), (max-width: 1024px) and (orientation: portrait)" srcset="/images/hero-movil.png" />
+    <img
+      src="/images/hero-desk.png"
+      alt=""
+      width="1672"
+      height="941"
+      fetchpriority="high"
+      decoding="async"
+    />
+  </picture>
+
+  <div class="hero-overlay" aria-hidden="true"></div>
+
+  <div class="hero-content">
+    <p class="hero-eyebrow">Tu cine en Torrijos</p>
+    <h1 class="hero-title" id="hero-title">
+      <span>Vive el</span>
+      <span class="hero-title__gold">cine en</span>
+      <span class="hero-title__red">Torrijos</span>
+    </h1>
+    <p class="hero-copy">Tu cine, tu momento, tus historias. La mejor experiencia en la gran pantalla.</p>
+
+    <div class="hero-actions" aria-label="Acciones principales">
+      <a class="hero-button hero-button--primary" href="/#cartelera">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M7 3.75v3.5" />
+          <path d="M17 3.75v3.5" />
+          <path d="M4.75 9.25h14.5" />
+          <path d="M6.5 5.25h11A1.75 1.75 0 0 1 19.25 7v10.5a1.75 1.75 0 0 1-1.75 1.75h-11a1.75 1.75 0 0 1-1.75-1.75V7A1.75 1.75 0 0 1 6.5 5.25Z" />
+        </svg>
+        <span>Ver cartelera</span>
+      </a>
+      <a class="hero-button hero-button--secondary" href="/#cartelera">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M4.75 8.25V6.5A1.75 1.75 0 0 1 6.5 4.75h11A1.75 1.75 0 0 1 19.25 6.5v1.75a2.75 2.75 0 0 0 0 5.5v3.75a1.75 1.75 0 0 1-1.75 1.75h-11a1.75 1.75 0 0 1-1.75-1.75v-3.75a2.75 2.75 0 0 0 0-5.5Z" />
+          <path d="M9.75 7.25v9.5" />
+        </svg>
+        <span>Comprar entradas</span>
+      </a>
+    </div>
+
+    <ul class="hero-benefits" aria-label="Beneficios de Cine Torrijos">
+      {
+        benefits.map((benefit) => (
+          <li>
+            <span class="hero-benefits__icon" aria-hidden="true">
+              {benefit.icon === "screen" && (
+                <svg viewBox="0 0 24 24">
+                  <path d="M4.75 6.5A1.75 1.75 0 0 1 6.5 4.75h11a1.75 1.75 0 0 1 1.75 1.75v7A1.75 1.75 0 0 1 17.5 15.25h-11a1.75 1.75 0 0 1-1.75-1.75v-7Z" />
+                  <path d="M9 19.25h6" />
+                  <path d="M12 15.25v4" />
+                </svg>
+              )}
+              {benefit.icon === "sound" && (
+                <svg viewBox="0 0 24 24">
+                  <path d="M4.75 14.25v-4.5h3.5l4.5-3.5v11.5l-4.5-3.5h-3.5Z" />
+                  <path d="M16.25 8.75a4.5 4.5 0 0 1 0 6.5" />
+                  <path d="M18.75 6.25a8 8 0 0 1 0 11.5" />
+                </svg>
+              )}
+              {benefit.icon === "seat" && (
+                <svg viewBox="0 0 24 24">
+                  <path d="M7.25 11.5V6.75a2 2 0 0 1 2-2h5.5a2 2 0 0 1 2 2v4.75" />
+                  <path d="M5.25 11.25h13.5a1.5 1.5 0 0 1 1.5 1.5v4.5h-16.5v-4.5a1.5 1.5 0 0 1 1.5-1.5Z" />
+                  <path d="M6.75 19.25v-2" />
+                  <path d="M17.25 19.25v-2" />
+                </svg>
+              )}
+            </span>
+            <span>{benefit.label}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>

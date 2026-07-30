@@ -1,0 +1,276 @@
+---
+import { experienceSlides } from "../../data/cinema";
+---
+
+<section
+  class="experience-section"
+  id="experiencia"
+  aria-roledescription="carrusel"
+  aria-label="Experiencias en Cine Torrijos"
+  data-experience-carousel
+>
+  <div class="experience-carousel__stage">
+    <div class="experience-carousel__slides">
+      {
+        experienceSlides.map((slide, index) => (
+          <figure
+            class:list={["experience-slide", index === 0 && "is-active"]}
+            data-experience-slide
+            aria-hidden={index === 0 ? "false" : "true"}
+            aria-label={`Diapositiva ${index + 1} de ${experienceSlides.length}: ${slide.title}`}
+          >
+            <img
+              src={slide.image}
+              alt={slide.alt}
+              width="1672"
+              height="941"
+              loading="lazy"
+              decoding="async"
+              style={`object-position: ${slide.objectPosition}`}
+            />
+            <figcaption>
+              <span>{slide.eyebrow}</span>
+              <strong>{slide.title}</strong>
+            </figcaption>
+          </figure>
+        ))
+      }
+    </div>
+
+    <div class="experience-carousel__shade" aria-hidden="true"></div>
+
+    <div class="experience-slide-captions" aria-hidden="true">
+      {
+        experienceSlides.map((slide, index) => (
+          <div class:list={["experience-slide-caption", index === 0 && "is-active"]} data-experience-caption>
+            <span>{slide.eyebrow}</span>
+            <strong>{slide.title}</strong>
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="experience-carousel__content">
+      <p class="section-kicker">Una experiencia para compartir</p>
+      <h2 id="experiencia-title">Hay historias que se disfrutan más juntos</h2>
+      <p>
+        En pareja, con amigos o en familia. Elige tu película, encuentra tu sesión y vuelve a sentir
+        la emoción de una sala llena.
+      </p>
+
+      <div class="experience-actions" aria-label="Acciones de la experiencia">
+        <a class="experience-button experience-button--primary" href="/#cartelera">
+          <svg aria-hidden="true" viewBox="0 0 24 24">
+            <path d="M4.75 8.25V6.5A1.75 1.75 0 0 1 6.5 4.75h11A1.75 1.75 0 0 1 19.25 6.5v1.75a2.75 2.75 0 0 0 0 5.5v3.75a1.75 1.75 0 0 1-1.75 1.75h-11a1.75 1.75 0 0 1-1.75-1.75v-3.75a2.75 2.75 0 0 0 0-5.5Z" />
+            <path d="M9.75 7.25v9.5" />
+          </svg>
+          Ver cartelera
+        </a>
+        <a class="experience-button experience-button--secondary" href="/#horarios">
+          <svg aria-hidden="true" viewBox="0 0 24 24">
+            <path d="M7.75 3.75v2.5" />
+            <path d="M16.25 3.75v2.5" />
+            <path d="M5.75 5.25h12.5a2 2 0 0 1 2 2v10.5a2 2 0 0 1-2 2H5.75a2 2 0 0 1-2-2V7.25a2 2 0 0 1 2-2Z" />
+            <path d="M7 10.25h10" />
+            <path d="M8.25 14h3.25" />
+          </svg>
+          Elegir sesión
+        </a>
+      </div>
+    </div>
+
+    <div class="experience-carousel__controls" aria-label="Controles del carrusel">
+      <div class="experience-current" aria-hidden="true">
+        <span data-experience-current>01</span>
+        <span>/</span>
+        <span>{String(experienceSlides.length).padStart(2, "0")}</span>
+      </div>
+
+      <div class="experience-progress" aria-hidden="true">
+        <span data-experience-progress></span>
+      </div>
+
+      <div class="experience-arrows">
+        <button type="button" class="experience-arrow" aria-label="Ver experiencia anterior" data-experience-prev>
+          <svg aria-hidden="true" viewBox="0 0 24 24">
+            <path d="M15.25 5.75 9 12l6.25 6.25" />
+          </svg>
+        </button>
+        <button type="button" class="experience-arrow" aria-label="Ver experiencia siguiente" data-experience-next>
+          <svg aria-hidden="true" viewBox="0 0 24 24">
+            <path d="M8.75 5.75 15 12l-6.25 6.25" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="experience-dots" aria-label="Seleccionar diapositiva">
+        {
+          experienceSlides.map((slide, index) => (
+            <button
+              type="button"
+              aria-label={`Ver diapositiva ${index + 1}: ${slide.eyebrow}`}
+              aria-current={index === 0 ? "true" : "false"}
+              data-experience-dot={index}
+            >
+              <span>{String(index + 1).padStart(2, "0")}</span>
+            </button>
+          ))
+        }
+      </div>
+    </div>
+
+    <p class="sr-only" aria-live="polite" data-experience-live></p>
+  </div>
+</section>
+
+<script>
+  (() => {
+    const root = document.querySelector("[data-experience-carousel]");
+    if (!(root instanceof HTMLElement) || root.dataset.initialized === "true") return;
+    root.dataset.initialized = "true";
+
+    const slides = Array.from(root.querySelectorAll("[data-experience-slide]"));
+    const captions = Array.from(root.querySelectorAll("[data-experience-caption]"));
+    const dots = Array.from(root.querySelectorAll("[data-experience-dot]"));
+    const current = root.querySelector("[data-experience-current]");
+    const progress = root.querySelector("[data-experience-progress]");
+    const live = root.querySelector("[data-experience-live]");
+    const prev = root.querySelector("[data-experience-prev]");
+    const next = root.querySelector("[data-experience-next]");
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const delay = 5600;
+    let activeIndex = 0;
+    let timer = 0;
+    let resumeTimer = 0;
+    let pausedByUser = false;
+    let pausedByFocus = false;
+    let pausedByHover = false;
+
+    const formatIndex = (index) => String(index + 1).padStart(2, "0");
+
+    const restartProgress = () => {
+      if (!(progress instanceof HTMLElement)) return;
+      progress.style.animation = "none";
+      progress.offsetHeight;
+      progress.style.animation = "";
+    };
+
+    const setPlaying = () => {
+      const shouldPlay =
+        !reduceMotion.matches && !document.hidden && !pausedByUser && !pausedByFocus && !pausedByHover;
+      root.dataset.playing = shouldPlay ? "true" : "false";
+      if (shouldPlay) restartProgress();
+      return shouldPlay;
+    };
+
+    const clearTimers = () => {
+      window.clearTimeout(timer);
+      window.clearTimeout(resumeTimer);
+    };
+
+    const queueAutoplay = () => {
+      window.clearTimeout(timer);
+      if (!setPlaying()) return;
+      timer = window.setTimeout(() => {
+        goTo(activeIndex + 1, false);
+        queueAutoplay();
+      }, delay);
+    };
+
+    const goTo = (index, isManual) => {
+      const nextIndex = (index + slides.length) % slides.length;
+      if (nextIndex === activeIndex) return;
+
+      slides[activeIndex]?.classList.remove("is-active");
+      slides[activeIndex]?.setAttribute("aria-hidden", "true");
+      captions[activeIndex]?.classList.remove("is-active");
+      dots[activeIndex]?.setAttribute("aria-current", "false");
+
+      activeIndex = nextIndex;
+
+      slides[activeIndex]?.classList.add("is-active");
+      slides[activeIndex]?.setAttribute("aria-hidden", "false");
+      captions[activeIndex]?.classList.add("is-active");
+      dots[activeIndex]?.setAttribute("aria-current", "true");
+      if (current) current.textContent = formatIndex(activeIndex);
+
+      if (isManual && live) {
+        const label = slides[activeIndex]?.getAttribute("aria-label") || `Diapositiva ${activeIndex + 1}`;
+        live.textContent = label;
+      }
+    };
+
+    const pauseForManualAction = () => {
+      pausedByUser = true;
+      clearTimers();
+      setPlaying();
+      if (reduceMotion.matches) return;
+      resumeTimer = window.setTimeout(() => {
+        pausedByUser = false;
+        queueAutoplay();
+      }, 7000);
+    };
+
+    prev?.addEventListener("click", () => {
+      pauseForManualAction();
+      goTo(activeIndex - 1, true);
+    });
+
+    next?.addEventListener("click", () => {
+      pauseForManualAction();
+      goTo(activeIndex + 1, true);
+    });
+
+    dots.forEach((dot, index) => {
+      dot.addEventListener("click", () => {
+        pauseForManualAction();
+        goTo(index, true);
+      });
+    });
+
+    root.addEventListener("mouseenter", () => {
+      pausedByHover = true;
+      window.clearTimeout(timer);
+      setPlaying();
+    });
+
+    root.addEventListener("mouseleave", () => {
+      pausedByHover = false;
+      queueAutoplay();
+    });
+
+    root.addEventListener("focusin", () => {
+      pausedByFocus = true;
+      window.clearTimeout(timer);
+      setPlaying();
+    });
+
+    root.addEventListener("focusout", () => {
+      window.setTimeout(() => {
+        pausedByFocus = root.contains(document.activeElement);
+        if (!pausedByFocus) queueAutoplay();
+      }, 0);
+    });
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        window.clearTimeout(timer);
+        setPlaying();
+      } else {
+        queueAutoplay();
+      }
+    });
+
+    reduceMotion.addEventListener("change", () => {
+      pausedByUser = false;
+      clearTimers();
+      queueAutoplay();
+    });
+
+    const nextImage = new Image();
+    nextImage.decoding = "async";
+    nextImage.src = "/images/amigos.png";
+
+    queueAutoplay();
+  })();
+</script>

@@ -1,0 +1,34 @@
+---
+import { promotions } from "../../data/cinema";
+import PromotionCard from "../promotions/PromotionCard.astro";
+---
+
+<section class="home-section promotions-section" id="promociones" aria-labelledby="promociones-title">
+  <div class="section-inner">
+    <div class="section-heading reveal-item">
+      <p>Más que una película</p>
+      <h2 id="promociones-title">Promociones que completan la experiencia</h2>
+    </div>
+
+    <div class="promotions-grid">
+      {promotions.map((promotion, index) => <PromotionCard promotion={promotion} index={index} />)}
+    </div>
+  </div>
+</section>
+
+<script>
+  const promoButtons = document.querySelectorAll("[data-promo-button]");
+
+  promoButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const id = button.getAttribute("data-promo-button");
+      const panel = document.querySelector(`[data-promo-panel="${id}"]`);
+      const isExpanded = button.getAttribute("aria-expanded") === "true";
+
+      button.setAttribute("aria-expanded", String(!isExpanded));
+      if (panel instanceof HTMLElement) {
+        panel.hidden = isExpanded;
+      }
+    });
+  });
+</script>

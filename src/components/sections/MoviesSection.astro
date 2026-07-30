@@ -1,0 +1,86 @@
+---
+import { movies } from "../../data/cinema";
+import MovieCard from "../movies/MovieCard.astro";
+
+const initialVisibleMovies = 8;
+---
+
+<section class="home-section movies-section" id="cartelera" aria-labelledby="cartelera-title">
+  <div class="section-inner">
+    <div class="section-heading reveal-item">
+      <p>En la gran pantalla</p>
+      <h2 id="cartelera-title">Cartelera destacada</h2>
+      <span>Historias para vivirlas como deben vivirse: en pantalla grande.</span>
+    </div>
+
+    <div
+      class="movies-track"
+      id="movies-grid"
+      aria-label="Películas destacadas"
+      data-movies-grid
+      data-initial-visible={initialVisibleMovies}
+    >
+      {movies.map((movie, index) => <MovieCard movie={movie} index={index} />)}
+    </div>
+
+    <div class="movies-load-more" hidden data-movies-load-more>
+      <button type="button" aria-expanded="false" aria-controls="movies-grid" data-movies-toggle>
+        Mostrar más películas
+      </button>
+    </div>
+  </div>
+</section>
+
+<script>
+  const moviesGrid = document.querySelector("[data-movies-grid]");
+  const moviesToggle = document.querySelector("[data-movies-toggle]");
+  const moviesLoadMore = document.querySelector("[data-movies-load-more]");
+
+  if (moviesGrid instanceof HTMLElement && moviesToggle instanceof HTMLButtonElement && moviesLoadMore instanceof HTMLElement) {
+    const cards = Array.from(moviesGrid.querySelectorAll("[data-movie-card]"));
+    const initialVisible = Number(moviesGrid.dataset.initialVisible || 8);
+    const chunkSize = 8;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let visibleCount = Math.min(initialVisible, cards.length);
+
+    const getMoreLabel = () => {
+      const remaining = cards.length - visibleCount;
+      const nextAmount = Math.min(chunkSize, remaining);
+      return `Mostrar ${nextAmount} ${nextAmount === 1 ? "película más" : "películas más"}`;
+    };
+
+    const updateMovies = ({ scrollToStart = false } = {}) => {
+      cards.forEach((card, index) => {
+        card.toggleAttribute("hidden", index >= visibleCount);
+      });
+
+      const expanded = visibleCount >= cards.length;
+      moviesToggle.setAttribute("aria-expanded", String(expanded));
+      moviesToggle.textContent = expanded ? "Mostrar menos" : getMoreLabel();
+
+      if (scrollToStart) {
+        moviesGrid.closest("#cartelera")?.scrollIntoView({
+          behavior: reduceMotion ? "auto" : "smooth",
+          block: "start",
+        });
+      }
+    };
+
+    if (cards.length > initialVisible) {
+      moviesLoadMore.hidden = false;
+      moviesGrid.dataset.progressive = "true";
+      updateMovies();
+
+      moviesToggle.addEventListener("click", () => {
+        if (visibleCount >= cards.length) {
+          visibleCount = Math.min(initialVisible, cards.length);
+          updateMovies({ scrollToStart: true });
+          return;
+        }
+
+        visibleCount = Math.min(visibleCount + chunkSize, cards.length);
+        updateMovies();
+      });
+    }
+  }
+</script>

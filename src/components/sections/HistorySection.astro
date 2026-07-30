@@ -1,0 +1,27 @@
+---
+import { historyContent } from "../../data/cinema";
+---
+
+<section class="home-section history-section" id="historia" aria-labelledby="historia-title">
+  <div class="section-inner history-layout">
+    <figure class="history-media reveal-item">
+      <img
+        src={historyContent.image}
+        alt={historyContent.alt}
+        width="1672"
+        height="941"
+        loading="lazy"
+        decoding="async"
+      />
+    </figure>
+
+    <div class="history-copy reveal-item" style="--reveal-index: 1">
+      <p class="section-kicker">{historyContent.eyebrow}</p>
+      <h2 id="historia-title">{historyContent.title}</h2>
+      <p>{historyContent.body}</p>
+      <p>{historyContent.secondary}</p>
+      <blockquote>{historyContent.quote}</blockquote>
+      <span>{historyContent.note}</span>
+    </div>
+  </div>
+</section>
