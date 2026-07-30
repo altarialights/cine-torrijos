@@ -15,20 +15,3 @@ import PromotionCard from "../promotions/PromotionCard.astro";
     </div>
   </div>
 </section>
-
-<script>
-  const promoButtons = document.querySelectorAll("[data-promo-button]");
-
-  promoButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      const id = button.getAttribute("data-promo-button");
-      const panel = document.querySelector(`[data-promo-panel="${id}"]`);
-      const isExpanded = button.getAttribute("aria-expanded") === "true";
-
-      button.setAttribute("aria-expanded", String(!isExpanded));
-      if (panel instanceof HTMLElement) {
-        panel.hidden = isExpanded;
-      }
-    });
-  });
-</script>

@@ -3,6 +3,7 @@ export const movies = [
     id: "eclipse-infinito",
     title: "Eclipse Infinito",
     genre: "Ciencia ficción",
+    description: "Una expedición se adentra en el último resplandor de una galaxia que empieza a apagarse.",
     image: "/images/portada1.png",
     sessions: ["17:00", "19:45", "22:30"],
   },
@@ -10,6 +11,7 @@ export const movies = [
     id: "susurros-del-pasado",
     title: "Susurros del Pasado",
     genre: "Drama · Misterio",
+    description: "Un regreso inesperado despierta secretos familiares que nunca debieron salir de la oscuridad.",
     image: "/images/portada2.png",
     sessions: ["17:30", "20:00", "22:20"],
   },
@@ -17,6 +19,7 @@ export const movies = [
     id: "la-luz-de-san-telmo",
     title: "La Luz de San Telmo",
     genre: "Thriller",
+    description: "Un faro aislado, una señal imposible y una noche en la que nadie cuenta toda la verdad.",
     image: "/images/portada3.png",
     sessions: ["18:00", "20:35", "22:45"],
   },
@@ -24,6 +27,7 @@ export const movies = [
     id: "ritmo-interior",
     title: "Ritmo Interior",
     genre: "Drama musical",
+    description: "Una historia de escenario, memoria y segundas oportunidades marcada por la fuerza de la música.",
     image: "/images/portada4.png",
     sessions: ["18:30", "21:15"],
   },
@@ -33,7 +37,7 @@ export const promotions = [
   {
     id: "menu-torrijos",
     title: "Menú Torrijos",
-    image: "/images/palomitas.png",
+    image: "/images/menu-bg.png",
     description: "Todo lo que necesitas para disfrutar la película de principio a fin.",
     detail: "Palomitas · Bebida · Experiencia completa",
     cta: "Descubrir el menú",
@@ -42,14 +46,14 @@ export const promotions = [
   {
     id: "dia-del-espectador",
     title: "Día del Espectador",
-    image: "/images/butaca.png",
+    image: "/images/espectador-bg.png",
     description: "Una forma diferente de disfrutar tus películas favoritas entre semana.",
     cta: "Consultar condiciones",
   },
   {
     id: "fidelidad-cine-torrijos",
     title: "Fidelidad Cine Torrijos",
-    image: "/images/tarjeta.png",
+    image: "/images/fidelidad-bg.png",
     description: "Muy pronto podrás acumular ventajas cada vez que vengas al cine.",
     label: "Próximamente",
   },
@@ -57,7 +61,7 @@ export const promotions = [
 
 export const navItems = [
   { label: "Inicio", href: "/#inicio" },
-  { label: "Historia", href: "/#historia" },
+  // { label: "Historia", href: "/#historia" },
   { label: "Cartelera", href: "/#cartelera" },
   { label: "Horarios", href: "/#horarios" },
   { label: "Promociones", href: "/#promociones" },
@@ -69,7 +73,7 @@ export const navItems = [
 
 export const desktopNavItems = [
   { label: "Inicio", href: "/#inicio", active: true },
-  { label: "Historia", href: "/#historia" },
+  // { label: "Historia", href: "/#historia" },
   { label: "Cartelera", href: "/#cartelera" },
   { label: "Horarios", href: "/#horarios" },
   { label: "Promociones", href: "/#promociones" },

@@ -5,7 +5,8 @@ import ContactSection from "../components/sections/ContactSection.astro";
 import ExperienceCarousel from "../components/sections/ExperienceCarousel.astro";
 import Footer from "../components/sections/Footer.astro";
 import FoodSection from "../components/sections/FoodSection.astro";
-import HistorySection from "../components/sections/HistorySection.astro";
+// HistorySection is intentionally kept available but not rendered for now.
+// import HistorySection from "../components/sections/HistorySection.astro";
 import LocationSection from "../components/sections/LocationSection.astro";
 import MoviesSection from "../components/sections/MoviesSection.astro";
 import PromotionsSection from "../components/sections/PromotionsSection.astro";
@@ -42,7 +43,9 @@ import "../styles/global.css";
     <Header />
     <main>
       <Hero />
+      {/*
       <HistorySection />
+      */}
       <MoviesSection />
       <ScheduleSection />
       <PromotionsSection />

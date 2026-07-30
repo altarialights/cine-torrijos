@@ -9,6 +9,9 @@ interface Props {
 }
 
 const { promotion, index } = Astro.props;
+const eyebrow = promotion.featured ? "La experiencia completa" : promotion.label;
+const ctaHref =
+  promotion.id === "menu-torrijos" ? "/#comida" : promotion.id === "dia-del-espectador" ? "/#contacto" : undefined;
 ---
 
 <article
@@ -21,22 +24,24 @@ const { promotion, index } = Astro.props;
   style={`--reveal-index: ${index}`}
 >
   <div class="promotion-card__media" aria-hidden="true">
-    <img src={promotion.image} alt="" width="720" height="720" loading="lazy" decoding="async" />
+    <img src={promotion.image} alt="" width="1472" height="1024" loading="lazy" decoding="async" />
   </div>
+
   <div class="promotion-card__content">
-    {promotion.label && <p class="promotion-card__label">{promotion.label}</p>}
+    {eyebrow && <p class="promotion-card__label">{eyebrow}</p>}
     <h3>{promotion.title}</h3>
     <p>{promotion.description}</p>
     {promotion.detail && <span>{promotion.detail}</span>}
+
     {
-      promotion.cta && (
-        <button type="button" data-promo-button={promotion.id} aria-expanded="false">
-          {promotion.cta}
-        </button>
+      promotion.cta && ctaHref && (
+        <a class="promotion-card__button" href={ctaHref}>
+          <span>{promotion.cta}</span>
+          <svg aria-hidden="true" viewBox="0 0 24 24">
+            <path d="M8.75 5.75 15 12l-6.25 6.25" />
+          </svg>
+        </a>
       )
     }
-    <small data-promo-panel={promotion.id} hidden>
-      Contenido informativo de demo. El propietario podrá sustituir aquí condiciones y detalles reales.
-    </small>
   </div>
 </article>

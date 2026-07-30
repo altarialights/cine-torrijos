@@ -14,8 +14,9 @@ const { movie, index } = Astro.props;
 <article class="schedule-row reveal-item" id={`horarios-${movie.id}`} style={`--reveal-index: ${index}`}>
   <img src={movie.image} alt={`Cartel de ${movie.title}`} width="160" height="240" loading="lazy" decoding="async" />
   <div class="schedule-row__info">
-    <p>{movie.genre}</p>
+    <p class="schedule-row__genre">{movie.genre}</p>
     <h3>{movie.title}</h3>
+    <p class="schedule-row__description">{movie.description}</p>
   </div>
   <div class="schedule-row__times" aria-label={`Sesiones de ${movie.title}`}>
     {
